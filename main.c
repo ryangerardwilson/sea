@@ -37,10 +37,10 @@ static enum MHD_Result my_app_callback(void *cls,
 }
 
 int main(int argc, char **argv) {
-    // Args: [db_path] [port] [app_name] — defaults: ./sea.db, 3000, MyApp
-    const char *db_path = (argc > 1) ? argv[1] : "./sea.db";
-    int port = (argc > 2) ? atoi(argv[2]) : 3000;
-    const char *app_name = (argc > 3) ? argv[3] : "MyApp";
+    // Args: [db_path] [port] [app_name] — defaults: app.db, 7000, MyApp
+    const char *db_path = (argc > 1) ? argv[1] : "app.db";
+    int port = (argc > 2) ? atoi(argv[2]) : 7000;
+    const char *app_name = (argc > 3) ? argv[3] : "app";
 
     sea_init(db_path, port, app_name); // Framework up—pass the damn params
     sea_add_route("/users", "GET", my_app_users); // Your routes here
