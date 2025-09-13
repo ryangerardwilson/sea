@@ -1,20 +1,24 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -std=gnu11 -Isea/include -g
-LIBS = -Lsea/lib -lsea -lmicrohttpd -lsqlite3
+CFLAGS = -Wall -Wextra -std=gnu11 -Iinclude -g
+AR = ar
+ARFLAGS = rcs
 
-all: sea-lib myapp
+CORE_SRCS = src/http.c src/router.c src/model.c src/view.c src/sea.c
+CORE_OBJS = $(CORE_SRCS:.c=.o)
 
-sea-lib:
-	cd sea && $(MAKE) lib
+# Build static lib
+lib: lib/libsea.a
 
-myapp: main.o sea-lib
-	$(CC) main.o -o myapp $(LIBS)
+lib/libsea.a: $(CORE_OBJS)
+	mkdir -p lib
+	$(AR) $(ARFLAGS) $@ $(CORE_OBJS)
+	@echo "Sea framework built: libsea.a—now link this shit in your apps."
 
-main.o: main.c
-	$(CC) $(CFLAGS) -c $<
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+LIBS = -lmicrohttpd -lsqlite3  # Link these in your apps too
 
 clean:
-	rm -f *.o
-	cd sea && $(MAKE) clean
+	rm -f $(CORE_OBJS) lib/libsea.a 
 
-.PHONY: all sea-lib clean
